@@ -32,11 +32,7 @@ import java.util.List;
 public class ACR_MTTF_Controller {
 
     @GetMapping   ("")
-    public R draw() throws IOException, MWException {
-        ACR acr= new ACR();
-        acr.ACR_MTTF(150);
-
-
+    public R draw() throws IOException {
         String basepath = System.getProperty("user.dir") + "/files/";  // 定于文件上传的根路径
         List<String> filenames= FileUtil.listFileNames(basepath);
         System.out.println(filenames);
