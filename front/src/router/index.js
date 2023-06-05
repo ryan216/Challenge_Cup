@@ -1,6 +1,6 @@
 import {createRouter, createWebHistory} from "vue-router";
 import Index from "../components/Index.vue";
-
+import Index2 from "../components/Index2.vue";
 let router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -15,6 +15,11 @@ let router = createRouter({
             name: "首页",
             component: Index
         },
+        {
+            path: "/index2",
+            name: "智慧隧道",
+            component: Index2
+        }
     ]
 });
 //路由守卫：to:要去的路由,from: 当前路由,next(): 放行
