@@ -6,19 +6,19 @@ let router = createRouter({
     routes: [
         {
             path: "/",
-            name: "index",
-            component: Index,
+            name: "首页",
+            component: Index2,
             redirect: "/index"
         },
         {
             path: "/index",
-            name: "首页",
-            component: Index
+            name: "智慧隧道",
+            component: Index2
         },
         {
             path: "/index2",
-            name: "智慧隧道",
-            component: Index2
+            name: "index2",
+            component: Index
         }
     ]
 });
