@@ -15,11 +15,11 @@ let router = createRouter({
             name: "智慧隧道",
             component: Index2
         },
-        {
-            path: "/index2",
-            name: "index2",
-            component: Index
-        }
+        // {
+        //     path: "/index2",
+        //     name: "index2",
+        //     component: Index
+        // }
     ]
 });
 //路由守卫：to:要去的路由,from: 当前路由,next(): 放行

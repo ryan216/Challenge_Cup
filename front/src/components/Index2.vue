@@ -8,28 +8,48 @@
           <div class="header-button active">结点部署</div>
         </div>
         <div class="header-right">
-          <div class="header-button">数字蛮生</div>
+          <div class="header-button">数字孪生</div>
         </div>
       </div>
     </el-header>
     <!---主体UI-->
     <el-main  style="position: relative;">
       <!--折线图-图例--> 
-      <div style="margin-left:220px; margin-top:30px;border: 1px solid yellow;width:50%;height:300px;display: flex;justify-content: space-between;">
+      <div style="margin-left:220px; margin-top:30px;width:50%;height:300px;display: flex;justify-content: space-between;">
         
-        <!--右侧-图例-->
-        <div style="border:1px solid red;width:50%">
-          <div style="width: 45%; display: flex;justify-content: space-between; color: #ffff;align-items: center;margin:25px 5px;" 
-              v-for="(item,index) in iconConfig" :key="index">
-            <img :src="getImage(item.path)" style="width:25px;" :style="item.style || {}"/>
-            <span>{{ item.name }}</span>
-          </div>
+        <!--左侧-图例-->
+        <div style="width:40%">
+          <el-card style="background-color:rgb(7 15 53);" :body-style="{height: '100%', margin:'0',padding: '0'}">
+            <template #header>
+              <div style="color: #ffff;display: flex;justify-content: center;">
+                <span>隧道UI图例</span>
+              </div>
+            </template>
+            <div style="width: 70%; display: flex;justify-content: space-between; color: #ffff;align-items: center;margin:5px 5px 20px 5px;" 
+                v-for="(item,index) in iconConfig" :key="index">
+              <img :src="getImage(item.path)" style="width:25px;" :style="item.style || {}"/>
+              <span>{{ item.name }}</span>
+            </div>
+          </el-card>
         </div>
 
-        <!--左侧-折线图-->
-        <div style="border: 1px solid blue;width:50%">
-          <div style="text-align: center;color:#ffff">覆盖面积:&nbsp;&nbsp;&nbsp;{{ this.Area[this.Area.length-1] }}&nbsp;&nbsp;&nbsp;可靠性:&nbsp;&nbsp;&nbsp;{{ this. reliability}}</div>
-          <VChart ref="AreaChart" :autoresize="true"></VChart>
+        <!--右侧-折线图-->
+        <div style="width:50%;margin-right: 20px;">
+          <el-card style="background-color: rgb(7 15 53);" :body-style="{margin: '0',padding: '0'}">
+            <template #header>
+              <div style="text-align: center;color:#ffff">覆盖面积:&nbsp;&nbsp;&nbsp;{{ this.Area[this.Area.length-1] }}</div>
+            </template>
+            <!-- 主体 -->
+            <div style="height: 275px">
+              <VChart ref="AreaChart" :autoresize="true"></VChart>
+            </div>
+          </el-card>
+        </div>
+
+        <!-- 可靠性 -->
+        <div style="width:10%;font-size: 18px;color:white;letter-spacing: 5px;" v-show="this.count == this.AllNodes.length">
+          <span style="writing-mode: vertical-rl;">可靠性:</span>
+          <span style="writing-mode: horizontal-tb;">{{ this.reliability }}</span>
         </div>
       </div>
 
@@ -136,8 +156,8 @@ export default {
     mounted() {
       this.changeNodesArray()
       this.renderAreaChart()
-      this.timer = setInterval(this.changeNodesArray, 1000 * 10)  //10s改变一次点的坐标
-      this.timer = setInterval(this.renderAreaChart, 1000 * 10)  //10s渲染一次折线图
+      this.timer = setInterval(this.changeNodesArray, 1000 * 5)  //10s改变一次点的坐标
+      this.timer = setInterval(this.renderAreaChart, 1000 * 5)  //10s渲染一次折线图
     },
     data() {
         return {
@@ -156,7 +176,7 @@ export default {
             iconConfig: [
               {
                 path: "node-active.png",
-                name: "激活状态"
+                name: "激活状态",
               },
               {
                 path: "node-relay.png",
@@ -190,13 +210,13 @@ export default {
     },
     methods: {
         getAllNode() {
-            var that = this;
+            // var that = this;
             // API.getNodes().then(function (res) {
             //     that.AllNodes = res.data.Nodes
-            //     that.changeNodesArray()
-            //     that.timer = setInterval(that.changeNodesArray, 1000 * 10)  //10s改变一次点的坐标
+            //     that.Areas = res.data.Areas
+            //     that.reliability = res.data.reliability;
             // });
-            const res = data;
+            const res = data
             this.AllNodes = res.data.Nodes
             this.Areas = res.data.Areas
             this.reliability = res.data.reliability;
@@ -204,8 +224,8 @@ export default {
         changeNodesArray() {
             if (this.count < this.AllNodes.length) {
                 this.nodes = this.AllNodes[this.count]
-                if (this.count !=0 ) {
-                  this.Area.push(parseInt(this.Areas[this.count]))
+                if (this.count != 0 ) {
+                  this.Area.push(parseInt(this.Areas[this.count-1]))
                 } else {
                   this.Area.push(0)
                 }
@@ -225,7 +245,7 @@ export default {
             },
             xAxis: {
               type: "category",
-              data: Array.from({length: this.Areas.length}, (x, i) => i),
+              data: Array.from({length: this.Areas.length+1}, (x, i) => i),
               axisLine: {
                 show: true,
                 symbol: ['none','arrow'],
@@ -265,13 +285,15 @@ export default {
               {
                 data: this.Area,
                 type: 'line',
-                label: {
-                show: true,
-                position: 'bottom',
-                textStyle: {
-                  fontSize: 10
+                itemStyle: {
+                  normal: {
+                    color: "#1bdaf8",
+                    label : {
+                      show: true,
+                      color: "#ffff"
+                    }
+                  }
                 }
-              }
               }
             ]
           };
@@ -302,7 +324,6 @@ export default {
             }
           }
           this.fengji = x
-          console.log(x)
         },
         getImage(name) {
           return new URL(`../assets/${name}`, import.meta.url).href;
@@ -368,6 +389,11 @@ export default {
   padding: 0;
   margin: 0;
 }
+.el-card :deep() .el-card__header {
+    height: 10% !important;
+    padding: 0 !important;
+}
+
 @keyframes rotate{
 	0% {
 		transform: rotate(0deg);/*从0度开始*/
@@ -375,7 +401,6 @@ export default {
   to {
     transform: rotate(1turn);/*从0度开始*/
   }
-
 }
 /* @-webkit-keyframes rotate {
     0% {
