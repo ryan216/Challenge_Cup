@@ -1,20 +1,25 @@
 import {createRouter, createWebHistory} from "vue-router";
 import Index from "../components/Index.vue";
-
+import Index2 from "../components/Index2.vue";
 let router = createRouter({
     history: createWebHistory(),
     routes: [
         {
             path: "/",
-            name: "index",
-            component: Index,
+            name: "首页",
+            component: Index2,
             redirect: "/index"
         },
         {
             path: "/index",
-            name: "首页",
-            component: Index
+            name: "智慧隧道",
+            component: Index2
         },
+        {
+            path: "/index2",
+            name: "index2",
+            component: Index
+        }
     ]
 });
 //路由守卫：to:要去的路由,from: 当前路由,next(): 放行

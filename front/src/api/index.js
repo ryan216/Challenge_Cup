@@ -1,5 +1,5 @@
 import axios from "axios";
-let baseurl = "http://172.16.10.100:9000";
+let baseurl = "http://172.16.10.110:9000";
 axios.defaults.withCredentials = true;
 
 // //添加一个请求拦截器,在请求头部添加token
