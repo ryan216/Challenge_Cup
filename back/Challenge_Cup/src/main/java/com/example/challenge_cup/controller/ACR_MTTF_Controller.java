@@ -15,6 +15,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +35,17 @@ public class ACR_MTTF_Controller {
 
     @GetMapping   ("")
     public R draw() throws IOException, MWException {
+
+        //清除之前数据
+        String basepath_origin = System.getProperty("user.dir") + "/files/";  // 定于文件上传的根路径
+        List<String> filenames_origin= FileUtil.listFileNames(basepath_origin);
+        for(String filename:filenames_origin){
+            boolean del = Files.deleteIfExists(Paths.get(basepath_origin+filename));
+        }
+
+
         ACR acr= new ACR();
         acr.ACR_MTTF(150);
-
 
         String basepath = System.getProperty("user.dir") + "/files/";  // 定于文件上传的根路径
         List<String> filenames= FileUtil.listFileNames(basepath);
@@ -43,8 +53,10 @@ public class ACR_MTTF_Controller {
         HashMap<String,Object> res =new HashMap<>();
 
         List<List<Node>> res_nodes=new ArrayList<>();
-        List<List<Node>> res_rebuild=new ArrayList<>();
+//        List<List<Node>> res_rebuild=new ArrayList<>();
         List<String> res_area=new ArrayList<>();
+
+        String reliability = null;
         for(String filanme:filenames){
 
             if(filanme.contains("ZuoBiao")){
@@ -67,19 +79,19 @@ public class ACR_MTTF_Controller {
             }
 
 
-            if(filanme.contains("rebuild")){
-                BufferedReader bufferedReader =new BufferedReader(new FileReader(basepath+filanme));
-                String str;
-                List<Node> res_tmp =new ArrayList<>();
-                while ((str = bufferedReader.readLine()) != null) {
-                    Node node=new Node();
-                    String[] s=str.split(" ");
-                    node.setX(s[0]);
-                    node.setY(s[1]);
-                    res_tmp.add(node);
-                }
-                res_rebuild.add(res_tmp);
-            }
+//            if(filanme.contains("rebuild")){
+//                BufferedReader bufferedReader =new BufferedReader(new FileReader(basepath+filanme));
+//                String str;
+//                List<Node> res_tmp =new ArrayList<>();
+//                while ((str = bufferedReader.readLine()) != null) {
+//                    Node node=new Node();
+//                    String[] s=str.split(" ");
+//                    node.setX(s[0]);
+//                    node.setY(s[1]);
+//                    res_tmp.add(node);
+//                }
+//                res_rebuild.add(res_tmp);
+//            }
             if(filanme.contains("area")){
                 BufferedReader bufferedReader =new BufferedReader(new FileReader(basepath+filanme));
                 String str;
@@ -87,10 +99,19 @@ public class ACR_MTTF_Controller {
                     res_area.add(str);
                 }
             }
+
+            if(filanme.contains("reliability")){
+                BufferedReader bufferedReader =new BufferedReader(new FileReader(basepath+filanme));
+                String str;
+                while ((str = bufferedReader.readLine()) != null) {
+                    reliability=str;
+                }
+            }
         }
         res.put("Nodes",res_nodes);
         res.put("Areas",res_area);
-        res.put("RebulidNodes",res_rebuild);
+//        res.put("RebulidNodes",res_rebuild);
+        res.put("reliability",reliability);
 
 //        System.out.println(res);
         return new R("计算结果获取成功",res,true);
