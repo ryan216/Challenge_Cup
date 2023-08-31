@@ -5,10 +5,10 @@
       <div class="header-title">可靠节点部署</div>
       <div class="btn-ul">
         <div class="header-left" style="margin-right: 50%">
-          <div class="header-button active">结点部署</div>
+          <div class="header-button active"><a href="">结点部署</a></div>
         </div>
         <div class="header-right">
-          <div class="header-button">数字孪生</div>
+          <div class="header-button"><a href="http://192.168.10.45:8082/#/000">数字孪生</a></div>
         </div>
       </div>
     </el-header>
@@ -156,8 +156,8 @@ export default {
     mounted() {
       this.changeNodesArray()
       this.renderAreaChart()
-      this.timer = setInterval(this.changeNodesArray, 1000 * 5)  //10s改变一次点的坐标
-      this.timer = setInterval(this.renderAreaChart, 1000 * 5)  //10s渲染一次折线图
+      this.timer = setInterval(this.changeNodesArray, 1000 * 15)  //10s改变一次点的坐标
+      this.timer = setInterval(this.renderAreaChart, 1000 * 15)  //10s渲染一次折线图
     },
     data() {
         return {
@@ -378,6 +378,7 @@ export default {
 
 .header-button {
   height: 80%;
+  width:100%;
   background-image: url(../assets/btn2.png);
   background-size: cover;
   display: flex;

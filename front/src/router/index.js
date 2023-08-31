@@ -1,8 +1,8 @@
-import {createRouter, createWebHistory} from "vue-router";
+import {createRouter, createWebHashHistory, createWebHistory} from "vue-router";
 import Index from "../components/Index.vue";
 import Index2 from "../components/Index2.vue";
 let router = createRouter({
-    history: createWebHistory(),
+    history: createWebHashHistory(),
     routes: [
         {
             path: "/",
